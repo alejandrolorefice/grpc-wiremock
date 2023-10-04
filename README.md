@@ -17,12 +17,12 @@ grpc-wiremock is a **mock server** for **GRPC** services implemented as a wrappe
 
 ## Quick Usage
 1) Run 
-```posh
+```bash
 docker run -p 8888:8888 -p 50000:50000 -v $(pwd)/example/proto:/proto -v $(pwd)/example/wiremock:/wiremock adven27/grpc-wiremock
 ```
 
 2) Stub 
-```posh
+```bash
 curl -X POST http://localhost:8888/__admin/mappings \
   -d '{
     "request": {
@@ -46,7 +46,7 @@ curl -X POST http://localhost:8888/__admin/mappings \
 ```
 
 3) Check 
-```posh
+```bash
 grpcurl -H 'withAmount: 100.0' -plaintext -d '{"user_id": 1, "currency": "EUR"}' localhost:50000 api.wallet.BalanceService/getUserBalance
 ```
 
@@ -108,7 +108,7 @@ grpc:
         504: DEADLINE_EXCEEDED
 ```
 For example:
-```posh
+```bash
 docker run \
     -e GRPC_ERRORCODEBY_HTTP_STATUSCODE_400=OUT_OF_RANGE \
     -e GRPC_ERRORCODEBY_HTTP_STATUSCODE_510=DATA_LOSS \
@@ -130,7 +130,7 @@ GRPC_SERVER_MAXINBOUNDMESSAGESIZE
 
 Could be used like this:
 
-```posh
+```bash
 docker run -e GRPC_SERVER_MAXHEADERLISTSIZE=1000 adven27/grpc-wiremock
 ```
 
@@ -139,7 +139,7 @@ docker run -e GRPC_SERVER_MAXHEADERLISTSIZE=1000 adven27/grpc-wiremock
 WireMock server may be configured by passing [command line options](http://wiremock.org/docs/running-standalone/) 
 prefixed by `wiremock_`:
 
-```posh
+```bash
 docker run -e WIREMOCK_DISABLE-REQUEST-LOGGING -e WIREMOCK_PORT=0 adven27/grpc-wiremock
 ```
 
@@ -158,7 +158,7 @@ how many responses should be returned during the stream (`1` - if absent).
 
 The current response iteration number is available in `request.headers.streamCursor`:
 
-```posh
+```bash
 curl -X POST http://localhost:8888/__admin/mappings \
   -d '{
   "request": {
@@ -197,14 +197,14 @@ curl -X POST http://localhost:8888/__admin/mappings \
 In case you don't need to change proto files, you can build your own image with precompiled protos.  
 See an [example](/example/Dockerfile)
 
-### 5. Use with snappy compresser/decompresser
+### 5. Use with snappy compressor/decompressor
 
 Snappy support can be enabled using `EXTERNAL_CODECS` env variable as follows:
-```posh
+```bash
 docker run -e EXTERNAL_CODECS="snappy, another" adven27/grpc-wiremock
 ```
 Also in docker-compose:
-```posh
+```bash
     image: adven27/grpc-wiremock
     ports:
       - "12085:50000" # grpc port
@@ -220,10 +220,10 @@ Also in docker-compose:
 
 To increase performance some Wiremock related options may be tuned either directly or by enabling the "load" profile. 
 Next two commands are identical:
-```posh
+```bash
 docker run -e SPRING_PROFILES_ACTIVE=load adven27/grpc-wiremock
 ```
-```posh
+```bash
 docker run \
   -e WIREMOCK_NO-REQUEST-JOURNAL \
   -e WIREMOCK_DISABLE-REQUEST-LOGGING \
@@ -234,7 +234,7 @@ docker run \
 
 ### 7. Preserving proto field names in stubs
 
-By default, stub mappings must have proto fields references in lowerCamlCase, e.g. proto field `user_id` must be referenced as:
+By default, stub mappings must have proto fields references in lowerCamelCase, e.g. proto field `user_id` must be referenced as:
 
 ```json
 {
@@ -248,6 +248,6 @@ By default, stub mappings must have proto fields references in lowerCamlCase, e.
 
 To preserve proto field names the following env variable could be used:
 
-```posh
+```bash
 docker run -e JSON_PRESERVING_PROTO_FIELD_NAMES=true adven27/grpc-wiremock
 ```
